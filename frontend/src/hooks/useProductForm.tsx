@@ -2,21 +2,25 @@ import { AxiosError } from "axios";
 import { useActionState, useEffect } from "react";
 
 import API from "@/utils/api";
-import { FormState } from "@/utils/types";
+import { FormState, Product } from "@/utils/types";
 
 const initialState: FormState = {};
 
-export const useProductForm = () => {
+export const useProductForm = (onCreate: (product: Product) => void) => {
   const submitForm = async (
     _: FormState,
     formData: FormData
   ): Promise<FormState> => {
-    const name = formData.get("name");
-    const price = formData.get("price");
+    const name = formData.get("name") as string;
+    const price = formData.get("price") as string;
 
-    if (!name || !price) {
-      return { error: "Missing Fields!" };
-    }
+    if (!name || !price) return { error: "Missing Fields!" };
+    const product = {
+      name: name.trim().toLowerCase(),
+      price: Number(price),
+    };
+
+    await onCreate(product);
 
     try {
       const response = await API.post("/api/v1/users/login", { name, price });
