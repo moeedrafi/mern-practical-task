@@ -3,6 +3,7 @@ import { useActionState, useEffect } from "react";
 
 import API from "@/utils/api";
 import { FormState, Product } from "@/utils/types";
+import { toast } from "react-toastify";
 
 const initialState: FormState = {};
 
@@ -23,7 +24,7 @@ export const useProductForm = (onCreate: (product: Product) => void) => {
     await onCreate(product);
 
     try {
-      const response = await API.post("/api/v1/users/login", { name, price });
+      const response = await API.post("/api/v1/products/add", { name, price });
 
       return { success: response.data.message };
     } catch (error) {
@@ -39,9 +40,9 @@ export const useProductForm = (onCreate: (product: Product) => void) => {
 
   useEffect(() => {
     if (productState.success) {
-      console.log(productState.success);
+      toast.success(productState.success);
     } else if (productState.error) {
-      console.log(productState.error);
+      toast.success(productState.error);
     }
   }, [productState]);
 

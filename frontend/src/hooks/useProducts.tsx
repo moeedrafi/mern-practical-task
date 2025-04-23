@@ -10,7 +10,7 @@ export const useProducts = () => {
   );
 
   const fetchProducts = async () => {
-    const res = await API.get("/api/products");
+    const res = await API.get("/api/v1/products");
     setProducts(res.data.data);
   };
 
