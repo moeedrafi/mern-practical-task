@@ -18,8 +18,9 @@ export const useProducts = () => {
     addOptimisticProduct(newProduct);
 
     try {
-      await API.post("/api/products", newProduct);
-      fetchProducts();
+      const res = await API.get("/api/v1/products");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setProducts(res.data.data);
     } catch (err) {
       console.error("Failed to create product", err);
     }

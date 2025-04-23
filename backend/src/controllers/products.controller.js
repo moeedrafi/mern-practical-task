@@ -3,11 +3,11 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Products } from "../models/products.models.js";
 
-const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Products.find();
+const getAllProducts = asyncHandler(async (_, res) => {
+  const products = await Products.find().sort({ createdAt: -1 });
 
   return res
-    .status(201)
+    .status(200)
     .json(new ApiResponse(200, products, "Products Fetched Successfully"));
 });
 

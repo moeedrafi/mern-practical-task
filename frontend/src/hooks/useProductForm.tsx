@@ -1,13 +1,15 @@
 import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 import { useActionState, useEffect } from "react";
 
 import API from "@/utils/api";
 import { FormState, Product } from "@/utils/types";
-import { toast } from "react-toastify";
 
 const initialState: FormState = {};
 
-export const useProductForm = (onCreate: (product: Product) => void) => {
+export const useProductForm = (
+  onCreate: (product: Product) => Promise<void>
+) => {
   const submitForm = async (
     _: FormState,
     formData: FormData
@@ -16,16 +18,10 @@ export const useProductForm = (onCreate: (product: Product) => void) => {
     const price = formData.get("price") as string;
 
     if (!name || !price) return { error: "Missing Fields!" };
-    const product = {
-      name: name.trim().toLowerCase(),
-      price: Number(price),
-    };
-
-    await onCreate(product);
 
     try {
       const response = await API.post("/api/v1/products/add", { name, price });
-
+      await onCreate({ name, price: Number(price) });
       return { success: response.data.message };
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
