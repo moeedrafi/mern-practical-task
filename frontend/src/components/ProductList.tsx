@@ -1,28 +1,25 @@
-import { useProducts } from "@/hooks/useProducts";
+import { Product } from "@/utils/types";
 
-export const ProductList = () => {
-  const { formState, getProducts, isLoading, products } = useProducts();
+interface ProductListProps {
+  products: Product[];
+}
 
+export const ProductList = ({ products }: ProductListProps) => {
   return (
     <div className="bg-white p-4 rounded-lg w-1/2 md:w-1/4 shadow-md border border-gray-300">
       <h1 className="text-2xl font-bold text-center mb-5">Product List</h1>
 
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : formState.error ? (
-        <p className="text-red-500">{formState.error}</p>
-      ) : (
-        <>
-          {products.length > 0 ? (
-            <div className="flex justify-between space-y-4">
-              <p>Product Name</p>
-              <p>Product Price</p>
+      <div className="flex justify-between space-y-4">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <div key={product._id}>
+              <strong>{product.name}</strong>: ${product.price}
             </div>
-          ) : (
-            <p>No products found!</p>
-          )}
-        </>
-      )}
+          ))
+        ) : (
+          <p>No Products!</p>
+        )}
+      </div>
     </div>
   );
 };
